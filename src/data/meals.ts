@@ -1,0 +1,155 @@
+import { DayMealPlan, MealIngredient } from '../types';
+
+const ing = (name: string, amount: number, unit: MealIngredient['unit'], note?: string): MealIngredient => ({
+  name,
+  amount,
+  unit,
+  note,
+});
+
+export const workoutDayPlan: DayMealPlan = {
+  dayType: 'spor',
+  meals: {
+    kahvalti: {
+      id: 'w-kahvalti',
+      name: 'Yulaf & Muz Smoothie Bowl',
+      description: 'Enerji veren, protein destekli kahvaltı',
+      calories: 420,
+      protein: 28,
+      carbs: 52,
+      fat: 12,
+      prepTime: 10,
+      ingredients: [
+        ing('Yulaf ezmesi', 50, 'g'),
+        ing('Muz', 1, 'adet', 'orta boy'),
+        ing('Yunan yoğurdu', 150, 'g'),
+        ing('Bal', 1, 'yemek kaşığı'),
+        ing('Ceviz', 20, 'g'),
+      ],
+    },
+    ogle: {
+      id: 'w-ogle',
+      name: 'Tavuklu Quinoa Salatası',
+      description: 'Antrenman öncesi hafif ve besleyici öğle yemeği',
+      calories: 480,
+      protein: 42,
+      carbs: 38,
+      fat: 14,
+      prepTime: 25,
+      ingredients: [
+        ing('Tavuk göğsü', 150, 'g'),
+        ing('Quinoa', 60, 'g', 'kuru ölçü'),
+        ing('Domates', 1, 'adet'),
+        ing('Salatalık', 0.5, 'adet'),
+        ing('Zeytinyağı', 1, 'yemek kaşığı'),
+        ing('Limon', 0.5, 'adet'),
+      ],
+    },
+    aksam: {
+      id: 'w-aksam',
+      name: 'Somon & Tatlı Patates',
+      description: 'Kas onarımı için yüksek protein akşam yemeği',
+      calories: 550,
+      protein: 45,
+      carbs: 42,
+      fat: 18,
+      prepTime: 35,
+      ingredients: [
+        ing('Somon fileto', 180, 'g'),
+        ing('Tatlı patates', 200, 'g'),
+        ing('Brokoli', 150, 'g'),
+        ing('Sarımsak', 2, 'diş'),
+        ing('Zeytinyağı', 1, 'yemek kaşığı'),
+      ],
+    },
+    araOgun: {
+      id: 'w-ara',
+      name: 'Protein Bar & Badem',
+      description: 'Antrenman sonrası hızlı toparlanma',
+      calories: 280,
+      protein: 20,
+      carbs: 22,
+      fat: 14,
+      prepTime: 2,
+      ingredients: [
+        ing('Protein bar', 1, 'adet', '60 g civarı'),
+        ing('Badem', 30, 'g'),
+        ing('Elma', 1, 'adet', 'orta boy'),
+      ],
+    },
+  },
+};
+
+export const restDayPlan: DayMealPlan = {
+  dayType: 'dinlenme',
+  meals: {
+    kahvalti: {
+      id: 'r-kahvalti',
+      name: 'Peynirli Omlet & Tam Buğday Ekmeği',
+      description: 'Dengeli ve doyurucu kahvaltı',
+      calories: 380,
+      protein: 24,
+      carbs: 28,
+      fat: 18,
+      prepTime: 15,
+      ingredients: [
+        ing('Yumurta', 2, 'adet'),
+        ing('Beyaz peynir', 50, 'g'),
+        ing('Tam buğday ekmeği', 2, 'dilim'),
+        ing('Domates', 1, 'adet'),
+        ing('Maydanoz', 1, 'demet', 'küçük'),
+      ],
+    },
+    ogle: {
+      id: 'r-ogle',
+      name: 'Mercimek Çorbası & Yeşil Salata',
+      description: 'Hafif ve lif açısından zengin öğle',
+      calories: 350,
+      protein: 18,
+      carbs: 45,
+      fat: 8,
+      prepTime: 30,
+      ingredients: [
+        ing('Kırmızı mercimek', 80, 'g'),
+        ing('Soğan', 0.5, 'adet'),
+        ing('Havuç', 1, 'adet', 'orta boy'),
+        ing('Marul', 100, 'g'),
+        ing('Zeytinyağı', 1, 'yemek kaşığı'),
+      ],
+    },
+    aksam: {
+      id: 'r-aksam',
+      name: 'Izgara Köfte & Bulgur Pilavı',
+      description: 'Geleneksel ve besleyici akşam yemeği',
+      calories: 480,
+      protein: 32,
+      carbs: 48,
+      fat: 16,
+      prepTime: 40,
+      ingredients: [
+        ing('Dana kıyma', 150, 'g', '%10-15 yağlı'),
+        ing('Bulgur', 80, 'g', 'kuru ölçü'),
+        ing('Soğan', 0.5, 'adet'),
+        ing('Domates salçası', 1, 'yemek kaşığı'),
+        ing('Yeşillik', 50, 'g'),
+      ],
+    },
+    araOgun: {
+      id: 'r-ara',
+      name: 'Meyve & Kefir',
+      description: 'Hafif ara öğün',
+      calories: 180,
+      protein: 8,
+      carbs: 28,
+      fat: 4,
+      prepTime: 3,
+      ingredients: [
+        ing('Çilek', 150, 'g'),
+        ing('Kefir', 200, 'ml'),
+        ing('Chia tohumu', 10, 'g'),
+      ],
+    },
+  },
+};
+
+export const DEFAULT_WORKOUT_DAYS = [1, 3, 5]; // Pazartesi, Çarşamba, Cuma

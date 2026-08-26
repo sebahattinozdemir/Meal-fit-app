@@ -1,0 +1,69 @@
+{
+  "expo": {
+    "name": "Meal Fit",
+    "slug": "meal-fit-app",
+    "scheme": "mealfit",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#10B981"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mealfit.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Profil fotoğrafı seçmek için galeri erişimi gerekir.",
+        "NSCameraUsageDescription": "Profil fotoğrafı çekmek için kamera erişimi gerekir.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.mealfit.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.CAMERA",
+        "android.permission.READ_MEDIA_IMAGES"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      },
+      "privacyPolicyUrl": "https://mealfit.app/privacy",
+      "termsUrl": "https://mealfit.app/terms",
+      "supportEmail": "support@mealfit.app"
+    },
+    "owner": "REPLACE_WITH_EXPO_ACCOUNT"
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "color": "#10B981"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Profil fotoğrafı seçmek için galeri erişimi gerekir.",
+          "cameraPermission": "Profil fotoğrafı çekmek için kamera erişimi gerekir."
+        }
+      ]
+    ]
+  }
+}
