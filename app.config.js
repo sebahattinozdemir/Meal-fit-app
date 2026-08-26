@@ -67,8 +67,11 @@ module.exports = {
         }
       : {}),
     privacyPolicyUrl:
-      process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL || 'https://mealfit.app/privacy',
-    termsUrl: process.env.EXPO_PUBLIC_TERMS_URL || 'https://mealfit.app/terms',
+      process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL ||
+      'https://sebahattinozdemir.github.io/Meal-fit-app/privacy.html',
+    termsUrl:
+      process.env.EXPO_PUBLIC_TERMS_URL ||
+      'https://sebahattinozdemir.github.io/Meal-fit-app/terms.html',
     supportEmail: process.env.EXPO_PUBLIC_SUPPORT_EMAIL || 'support@mealfit.app',
   },
 };

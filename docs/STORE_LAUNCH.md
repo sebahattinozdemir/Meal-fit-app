@@ -1,44 +1,57 @@
 # Meal Fit — App Store & Google Play Yayın Rehberi
 
-Bu rehber, Meal Fit uygulamasını App Store ve Google Play'e göndermek için gereken adımları listeler.
+Bu rehber, **yeni özellik eklemeden** uygulamayı mağazaya göndermek için gereken adımları listeler.
 
-## Ön koşullar
+## Hızlı özet — senin yapman gerekenler
 
-- [ ] Apple Developer Program üyeliği ($99/yıl)
-- [ ] Google Play Console hesabı ($25 tek seferlik)
-- [ ] [RevenueCat](https://www.revenuecat.com) hesabı (IAP yönetimi)
-- [ ] Expo hesabı + [EAS CLI](https://docs.expo.dev/build/setup/)
+| # | Adım | Nerede |
+|---|------|--------|
+| 1 | GitHub Pages aç | Repo → Settings → Pages → Branch: `main`, Folder: `/docs` |
+| 2 | `.env` doldur | `npm run store:setup-env` → RevenueCat + Expo token |
+| 3 | EAS bağla | `npm run eas:setup` |
+| 4 | Kontrol | `npm run store:check` → sonra `npm run store:check -- --online` |
+| 5 | Store ürünleri | App Store Connect + Play Console + RevenueCat |
+| 6 | Preview build | `npm run eas:build:preview` → TestFlight / internal test |
+| 7 | IAP test | Sandbox Apple ID ile gerçek satın alma |
+| 8 | Production build | `npm run eas:build:production` |
+| 9 | Gönder | App Store Connect + Play Console yükleme |
 
-```bash
-npm install -g eas-cli
-eas login
-cd meal-fit-app
-eas init   # app.json → extra.eas.projectId güncellenir
-```
+Yasal sayfalar repoda hazır: `docs/privacy.html`, `docs/terms.html`  
+Varsayılan URL: `https://sebahattinozdemir.github.io/Meal-fit-app/privacy.html`
+
+---
+
+## 0. GitHub Pages (gizlilik & koşullar)
+
+1. GitHub repo: `sebahattinozdemir/Meal-fit-app`
+2. **Settings → Pages**
+3. Source: **Deploy from a branch**
+4. Branch: **main** / Folder: **/docs**
+5. Save — birkaç dakika sonra URL'ler canlı olur
+6. Doğrula: `npm run store:check -- --online` (`.env` dolu olmalı)
+
+Kendi alan adın varsa `EXPO_PUBLIC_PRIVACY_POLICY_URL` ve `EXPO_PUBLIC_TERMS_URL` güncelle.
 
 ---
 
 ## 1. Ortam değişkenleri
 
-`.env.example` dosyasını `.env` olarak kopyalayın ve doldurun:
-
 ```bash
-cp .env.example .env
+npm run store:setup-env
+# .env dosyasını düzenle
 ```
 
 | Değişken | Açıklama |
 |----------|----------|
 | `EXPO_PUBLIC_REVENUECAT_IOS_API_KEY` | RevenueCat iOS public key |
 | `EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY` | RevenueCat Android public key |
-| `EXPO_PUBLIC_PRIVACY_POLICY_URL` | Yayınlanmış gizlilik politikası URL'si |
-| `EXPO_PUBLIC_TERMS_URL` | Kullanım koşulları URL'si |
+| `EXPO_TOKEN` | expo.dev access token |
+| `EXPO_ACCOUNT` | Expo kullanıcı adın |
+| `EAS_PROJECT_ID` | `eas init` sonrası UUID |
+| `EXPO_PUBLIC_PRIVACY_POLICY_URL` | Canlı gizlilik URL |
+| `EXPO_PUBLIC_TERMS_URL` | Canlı koşullar URL |
 
-EAS build için secret'ları ekleyin:
-
-```bash
-eas secret:create --name EXPO_PUBLIC_REVENUECAT_IOS_API_KEY --value appl_xxx --type string
-eas secret:create --name EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY --value goog_xxx --type string
-```
+EAS secrets: `npm run eas:setup` (RevenueCat anahtarlarını otomatik ekler)
 
 ---
 
@@ -50,134 +63,68 @@ eas secret:create --name EXPO_PUBLIC_REVENUECAT_ANDROID_API_KEY --value goog_xxx
 | Android | Package | `com.mealfit.app` |
 | Scheme | Deep link | `mealfit://` |
 
-Farklı bir bundle ID kullanacaksanız `app.config.js` ve `src/constants/store.ts` dosyalarını güncelleyin.
-
-### Hızlı komutlar
-
-```bash
-npm run store:setup-env   # .env oluştur
-# .env dosyasını doldur
-npm run eas:setup         # EAS init + secrets
-npm run store:check       # eksik alan kontrolü
-npm run eas:build:preview # internal test build
-```
-
-RevenueCat adımları: `docs/REVENUECAT_SETUP.md`
-
 ---
 
 ## 3. Abonelik ürünleri (IAP)
 
 ### App Store Connect
 
-1. Uygulamayı oluşturun → **Subscriptions** grubu ekleyin (ör. `pro`).
-2. Aşağıdaki ürünleri oluşturun:
+1. Uygulamayı oluştur → **Subscriptions** grubu (ör. `pro`)
+2. Ürünler:
 
 | Product ID | Tip | Önerilen fiyat |
 |------------|-----|----------------|
 | `com.mealfit.app.pro.monthly` | Auto-renewable monthly | ₺99/ay |
 | `com.mealfit.app.pro.yearly` | Auto-renewable yearly | ₺799/yıl |
 
-3. **7 günlük ücretsiz deneme** (intro offer) isteğe bağlı ekleyin.
-4. Abonelik açıklamasında Pro özelliklerini listeleyin.
+3. İsteğe bağlı **7 günlük ücretsiz deneme** (intro offer)
 
 ### Google Play Console
 
-1. **Monetize → Subscriptions** altında aynı product ID'leri oluşturun.
-2. Base plan + isteğe bağlı free trial tanımlayın.
+Aynı product ID'ler → **Monetize → Subscriptions**
 
 ### RevenueCat
 
-1. Yeni proje → iOS + Android uygulamalarını bağlayın.
-2. **Entitlements:** `pro` oluşturun.
-3. Her iki store ürününü `pro` entitlement'a bağlayın.
-4. **Offerings → default** offering'e monthly + yearly paketlerini ekleyin.
-5. Public API key'leri `.env` / EAS secrets'a yapıştırın.
+Detay: `docs/REVENUECAT_SETUP.md` — entitlement `pro`, offering `default`
 
 ---
 
-## 4. Gizlilik & yasal
+## 4. Gizlilik & yasal (uygulama içi)
 
-1. `docs/PRIVACY_POLICY.md` dosyasını web'de yayınlayın.
-2. `docs/TERMS_OF_USE.md` dosyasını web'de yayınlayın.
-3. App Store Connect → **App Privacy** anketi:
-   - Veri toplama: **Evet** (cihazda; sağlık/fitness kategorisi)
-   - Veri sunucuya gönderilmiyor (backend yok)
-   - Satın alma: Apple/RevenueCat üzerinden
-4. Play Console → **Data safety**: aynı bilgileri işaretleyin.
-
-Uygulama içinde **Ana sayfa → Yasal & destek** kartından linkler açılır.
+- Paywall'da otomatik yenileme metni + koşullar/gizlilik linkleri ✓
+- Profil → **Yasal & destek** kartı ✓
+- App Store Connect → **App Privacy**: fitness verisi cihazda, sunucuya gönderilmez
+- Play Console → **Data safety**: aynı bilgiler
 
 ---
 
 ## 5. Ekran görüntüleri & mağaza metinleri
 
-### Gerekli boyutlar
-
 | Platform | Boyut |
 |----------|-------|
 | iPhone 6.7" | 1290 × 2796 |
-| iPhone 6.5" | 1242 × 2688 |
-| Android phone | 1080 × 1920 minimum |
+| Android phone | 1080 × 1920 min |
 
-### Önerilen ekranlar
-
-1. Ana sayfa — günlük plan + kişisel öneri
-2. Yemek planı — makro uyumu
-3. Antrenman programları — Pro kilidi
-4. Gelişim grafikleri
-5. Pro paywall
-
-### Kısa açıklama (TR)
-
-> Antrenman günlerine göre kişisel yemek planı, alışveriş listesi ve spor programları. Pro ile tüm programlar, tarifler ve akıllı hatırlatmalar.
-
-### Anahtar kelimeler (iOS)
-
-`fitness, beslenme, yemek planı, antrenman, spor, kilo, protein, alışveriş listesi`
+**Kısa açıklama (TR):**  
+Antrenman günlerine göre kişisel yemek planı, alışveriş listesi ve spor programları. Pro ile tüm programlar, tarifler ve akıllı hatırlatmalar.
 
 ---
 
 ## 6. Build & test
 
-### Geliştirme (mock IAP)
-
 ```bash
-npm start
-# Expo Go — satın alma simüle edilir
+npm run store:check          # env kontrolü
+npm run eas:build:preview    # internal test (APK + iOS)
+npm run eas:build:production # store build (AAB + iOS)
 ```
 
-### Preview build (internal test)
+**TestFlight:** Sandbox Apple ID ile gerçek IAP — RevenueCat dashboard'da transaction görünmeli.
 
-```bash
-eas build --profile preview --platform all
-```
-
-### Production build
-
-```bash
-eas build --profile production --platform all
-```
-
-### TestFlight (iOS)
-
-```bash
-eas submit --platform ios --profile production
-```
-
-Sandbox Apple ID ile gerçek IAP test edin (RevenueCat dashboard'da transaction görünmeli).
-
-### Google Play internal testing
-
-1. Production AAB'yi internal track'e yükleyin.
-2. License tester hesapları ekleyin.
-3. Abonelik test kartlarıyla satın almayı doğrulayın.
+Submit yapılandırması: `eas.submit.example.json` → `eas.json` içine `submit` bloğu ekle.
 
 ---
 
 ## 7. Store inceleme notları
-
-Apple/Google'a gönderirken **Review Notes** alanına:
 
 ```
 Meal Fit is offline-first. No backend login required for core features.
@@ -186,7 +133,7 @@ Test account: create any local account on Login screen (email + password stored 
 Pro subscription unlocks all workout programs, extra recipes, smart reminders, and advanced charts.
 Use Sandbox tester for IAP on iOS / license tester on Android.
 
-Privacy policy: [YOUR_PRIVACY_URL]
+Privacy policy: https://sebahattinozdemir.github.io/Meal-fit-app/privacy.html
 Support: support@mealfit.app
 ```
 
@@ -194,34 +141,29 @@ Support: support@mealfit.app
 
 ## 8. Gönderim öncesi kontrol listesi
 
-- [ ] `app.json` → `extra.eas.projectId` ve `owner` güncellendi
+- [ ] GitHub Pages canlı (privacy + terms URL 200 döner)
+- [ ] `.env` + `npm run store:check` yeşil
 - [ ] RevenueCat offering + entitlement yapılandırıldı
 - [ ] Store'da monthly + yearly ürünler oluşturuldu
-- [ ] Gizlilik politikası URL'si canlı
-- [ ] Paywall'da otomatik yenileme metni görünüyor
-- [ ] "Satın alımı geri yükle" çalışıyor
-- [ ] Bildirim izni metni Türkçe
-- [ ] Uygulama ikonu + splash hazır
+- [ ] Paywall yasal metinleri görünüyor
+- [ ] "Satın alımı geri yükle" çalışıyor (TestFlight)
+- [ ] Ekran görüntüleri + mağaza açıklaması hazır
 - [ ] TestFlight / internal test tamamlandı
-- [ ] `eas submit` veya manuel yükleme yapıldı
+- [ ] Production build yüklendi
 
 ---
 
-## 9. Sık karşılaşılan red sebepleri
+## 9. Sık red sebepleri
 
 | Sebep | Çözüm |
 |-------|-------|
-| Gizlilik politikası URL'si 404 | URL'yi yayınlayın, App Store Connect'e ekleyin |
+| Gizlilik URL 404 | GitHub Pages aç veya URL güncelle |
 | IAP restore yok | Paywall'da "Satın alımı geri yükle" mevcut |
 | Abonelik şartları eksik | Paywall alt metni + Terms linki |
-| Demo hesap yok | Review notes'a yerel hesap açıklaması ekleyin |
-| Health data without purpose | App Privacy'de fitness amacını belirtin |
+| Demo hesap yok | Review notes'a yerel hesap açıklaması |
 
 ---
 
-## 10. Yayın sonrası
+## 10. Sonraki faz (şimdi değil)
 
-- RevenueCat → **Charts** ile dönüşüm takibi
-- Crash: EAS + isteğe bağlı Sentry
-- Kullanıcı geri bildirimi: support@mealfit.app
-- Fiyat A/B: RevenueCat Experiments
+Spor salonları / PT özelleştirmesi (salon markası, PT program atama, üye yönetimi) ayrı bir ürün fazıdır — mağaza yayınından sonra değerlendirilebilir.

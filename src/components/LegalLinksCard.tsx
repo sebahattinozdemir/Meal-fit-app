@@ -1,34 +1,19 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Linking, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LEGAL_URLS } from '../constants/store';
+import { openLegalUrl } from '../utils/legalLinks';
 import { colors, spacing, borderRadius } from '../constants/theme';
-
-async function openUrl(url: string, label: string) {
-  try {
-    const supported = await Linking.canOpenURL(url);
-    if (!supported) {
-      Alert.alert(label, `Bu bağlantı henüz yapılandırılmamış:\n${url}`);
-      return;
-    }
-    await Linking.openURL(url);
-  } catch {
-    Alert.alert('Hata', `${label} açılamadı.`);
-  }
-}
 
 export function LegalLinksCard() {
   return (
     <View style={styles.card}>
       <Text style={styles.title}>Yasal & destek</Text>
-      <Text style={styles.sub}>
-        Abonelik, gizlilik ve kullanım koşulları. Store yayını öncesi URL&apos;leri kendi alan adınızla
-        güncelleyin.
-      </Text>
+      <Text style={styles.sub}>Abonelik, gizlilik ve kullanım koşulları.</Text>
 
       <TouchableOpacity
         style={styles.row}
-        onPress={() => openUrl(LEGAL_URLS.privacy, 'Gizlilik politikası')}
+        onPress={() => openLegalUrl(LEGAL_URLS.privacy, 'Gizlilik politikası')}
         activeOpacity={0.85}
       >
         <Ionicons name="shield-checkmark-outline" size={18} color={colors.primary} />
@@ -38,7 +23,7 @@ export function LegalLinksCard() {
 
       <TouchableOpacity
         style={styles.row}
-        onPress={() => openUrl(LEGAL_URLS.terms, 'Kullanım koşulları')}
+        onPress={() => openLegalUrl(LEGAL_URLS.terms, 'Kullanım koşulları')}
         activeOpacity={0.85}
       >
         <Ionicons name="document-text-outline" size={18} color={colors.primary} />
@@ -48,7 +33,7 @@ export function LegalLinksCard() {
 
       <TouchableOpacity
         style={[styles.row, styles.rowLast]}
-        onPress={() => openUrl(`mailto:${LEGAL_URLS.supportEmail}`, 'Destek')}
+        onPress={() => openLegalUrl(`mailto:${LEGAL_URLS.supportEmail}`, 'Destek')}
         activeOpacity={0.85}
       >
         <Ionicons name="mail-outline" size={18} color={colors.primary} />

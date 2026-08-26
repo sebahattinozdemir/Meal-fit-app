@@ -12,12 +12,22 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSubscription, proFeatureLabel } from '../context/SubscriptionContext';
-import { ProFeature, FREE_FEATURES, PRO_FEATURES, PRO_PRICE } from '../data/subscription';
+import { ProFeature, FREE_FEATURES, PRO_FEATURES } from '../data/subscription';
+import { SubscriptionLegalFooter } from './SubscriptionLegalFooter';
 import { colors, spacing, borderRadius } from '../constants/theme';
 
 export function PaywallModal() {
   const insets = useSafeAreaInsets();
-  const { paywallVisible, paywallFeature, hidePaywall, purchasePro, restorePurchases, isPro } = useSubscription();
+  const {
+    paywallVisible,
+    paywallFeature,
+    hidePaywall,
+    purchasePro,
+    restorePurchases,
+    isPro,
+    storePrices,
+    iapMode,
+  } = useSubscription();
   const [loading, setLoading] = useState<'monthly' | 'yearly' | 'restore' | null>(null);
 
   if (isPro) return null;
@@ -26,6 +36,11 @@ export function PaywallModal() {
     paywallFeature === 'general'
       ? 'Pro ile tüm potansiyelini aç'
       : `${proFeatureLabel(paywallFeature as ProFeature)} — Pro gerekli`;
+
+  const heroSub =
+    iapMode === 'mock'
+      ? 'Geliştirme modu: satın alma simüle edilir. Mağaza sürümünde gerçek abonelik açılır.'
+      : '7 gün ücretsiz dene. Tüm programlar, tarifler ve akıllı hatırlatmalar.';
 
   const buy = async (plan: 'monthly' | 'yearly') => {
     setLoading(plan);
@@ -55,7 +70,7 @@ export function PaywallModal() {
             </TouchableOpacity>
             <Text style={styles.heroBadge}>PRO</Text>
             <Text style={styles.heroTitle}>{headline}</Text>
-            <Text style={styles.heroSub}>Store entegrasyonu öncesi test modunda satın alma simüle edilir.</Text>
+            <Text style={styles.heroSub}>{heroSub}</Text>
           </LinearGradient>
 
           <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
@@ -94,13 +109,15 @@ export function PaywallModal() {
               ) : (
                 <>
                   <View style={styles.priceRow}>
-                    <Text style={styles.priceMain}>{PRO_PRICE.yearly.currency}{PRO_PRICE.yearly.amount}</Text>
-                    <Text style={styles.pricePeriod}>/{PRO_PRICE.yearly.period}</Text>
-                    <View style={styles.saveBadge}>
-                      <Text style={styles.saveBadgeText}>{PRO_PRICE.yearly.badge}</Text>
-                    </View>
+                    <Text style={styles.priceMain}>{storePrices.yearly.priceString.split('/')[0]}</Text>
+                    <Text style={styles.pricePeriod}>/{storePrices.yearly.period}</Text>
+                    {storePrices.yearly.badge ? (
+                      <View style={styles.saveBadge}>
+                        <Text style={styles.saveBadgeText}>{storePrices.yearly.badge}</Text>
+                      </View>
+                    ) : null}
                   </View>
-                  <Text style={styles.priceSub}>7 gün ücretsiz dene (Store&apos;da aktif olacak)</Text>
+                  <Text style={styles.priceSub}>7 gün ücretsiz dene</Text>
                 </>
               )}
             </TouchableOpacity>
@@ -114,9 +131,7 @@ export function PaywallModal() {
               {loading === 'monthly' ? (
                 <ActivityIndicator color={colors.primary} />
               ) : (
-                <Text style={styles.monthlyText}>
-                  Aylık {PRO_PRICE.monthly.currency}{PRO_PRICE.monthly.amount}/{PRO_PRICE.monthly.period}
-                </Text>
+                <Text style={styles.monthlyText}>Aylık {storePrices.monthly.priceString}</Text>
               )}
             </TouchableOpacity>
 
@@ -125,6 +140,8 @@ export function PaywallModal() {
                 {loading === 'restore' ? 'Kontrol ediliyor...' : 'Satın alımı geri yükle'}
               </Text>
             </TouchableOpacity>
+
+            <SubscriptionLegalFooter compact />
           </View>
         </View>
       </View>

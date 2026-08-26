@@ -1,5 +1,8 @@
 import Constants from 'expo-constants';
 
+/** GitHub Pages — repo Settings → Pages → Branch: main, Folder: /docs */
+export const DEFAULT_LEGAL_BASE = 'https://sebahattinozdemir.github.io/Meal-fit-app';
+
 export const APP_BUNDLE_ID = 'com.mealfit.app';
 
 export const REVENUECAT_ENTITLEMENT_ID = 'pro';
@@ -17,11 +20,11 @@ export const LEGAL_URLS = {
   privacy:
     process.env.EXPO_PUBLIC_PRIVACY_POLICY_URL ??
     (extra.privacyPolicyUrl as string | undefined) ??
-    'https://mealfit.app/privacy',
+    `${DEFAULT_LEGAL_BASE}/privacy.html`,
   terms:
     process.env.EXPO_PUBLIC_TERMS_URL ??
     (extra.termsUrl as string | undefined) ??
-    'https://mealfit.app/terms',
+    `${DEFAULT_LEGAL_BASE}/terms.html`,
   supportEmail: (extra.supportEmail as string | undefined) ?? 'support@mealfit.app',
 } as const;
 
