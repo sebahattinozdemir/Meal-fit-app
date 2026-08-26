@@ -385,4 +385,3 @@ export async function syncKvkCatalog(): Promise<{ online: boolean; programCount:
   };
 }
 
-export { getProgramDayForToday } from './workoutPrograms';

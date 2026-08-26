@@ -170,7 +170,13 @@ export function buildRecommendations(profile: UserProfile): ProfileRecommendatio
   const bmi = calculateBMI(profile.weightKg, profile.heightCm);
   const bmiLabel = getBMILabel(bmi);
   const pick = pickProgram(profile.goal, profile.experienceLevel, profile.preferences);
-  const program = WORKOUT_PROGRAMS.find((p) => p.id === pick.id)!;
+  const program =
+    WORKOUT_PROGRAMS.find((p) => p.id === pick.id) ??
+    WORKOUT_PROGRAMS.find((p) => p.id === 'kvk-yeni-baslayan') ??
+    WORKOUT_PROGRAMS[0];
+  if (!program) {
+    throw new Error('Antrenman programı bulunamadı');
+  }
   const nutrition = getNutritionTargets(profile, true);
   const workoutDays = recommendWorkoutDays(profile.goal);
 
